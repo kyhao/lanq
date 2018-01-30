@@ -14,6 +14,7 @@ int main(){
 	for(int i = 2; n ; i++){
 		
 		if( i == 5)ans = t[3] + ans;
+		if( i == 5)ans = t[3] + ans;
 		ans = num[ n % 10 ] + " " + ans;
 		n /= 10;	
 			 
