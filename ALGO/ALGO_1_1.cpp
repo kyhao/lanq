@@ -1,4 +1,4 @@
-//递归实现斐波那契数列 
+//锟捷癸拷实锟斤拷斐诧拷锟斤拷锟斤拷锟斤拷锟斤拷 
 #include <iostream>
 using namespace std;
 
@@ -12,7 +12,7 @@ int f(int n){
 }
 
 int main(){
-	
-	
+	int n;
+	cin >> n;
 	return 0;
 }
