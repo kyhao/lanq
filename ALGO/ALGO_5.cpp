@@ -1,4 +1,4 @@
-//dijkstra×î¶ÌÂ·¾¶ 
+//dijkstraï¿½ï¿½ï¿½Â·ï¿½ï¿½ 
 #include <iostream>
 using namespace std;
 
@@ -6,7 +6,7 @@ using namespace std;
 
 void dijkstra(int** map, int* val, int node, int node_val, const int& n, int time){
 	
-	//..
+	//...
 	if(time == n - 2)return;
 	int min = 10001, node_1 = node;
 	for(int i = 1; i < n; i++){
@@ -26,8 +26,8 @@ void dijkstra(int** map, int* val, int node, int node_val, const int& n, int tim
 
 int main(){
 	int n, m;
-	cin >> n >> m;n++;	//ÌâÄ¿ÖÐ²»´Ó0¿ªÊ¼¡£ 
-	int* val = new int[n];		//¼ÇÂ¼1µãµ½ÆäËûµãµÄÖµ 
+	cin >> n >> m;n++;	//ï¿½ï¿½Ä¿ï¿½Ð²ï¿½ï¿½ï¿½0ï¿½ï¿½Ê¼ï¿½ï¿½ 
+	int* val = new int[n];		//ï¿½ï¿½Â¼1ï¿½ãµ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ 
 	int** map = new int*[n];
 	for(int i = 0; i < n; i++){
 		map[i] = new int[n];
