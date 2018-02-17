@@ -1,4 +1,4 @@
-//dijkstra���·�� 
+//dijkstra
 #include <iostream>
 using namespace std;
 
@@ -26,8 +26,8 @@ void dijkstra(int** map, int* val, int node, int node_val, const int& n, int tim
 
 int main(){
 	int n, m;
-	cin >> n >> m;n++;	//��Ŀ�в���0��ʼ�� 
-	int* val = new int[n];		//��¼1�㵽�������ֵ 
+	cin >> n >> m;n++;
+	int* val = new int[n];		
 	int** map = new int*[n];
 	for(int i = 0; i < n; i++){
 		map[i] = new int[n];
