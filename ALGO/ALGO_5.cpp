@@ -2,48 +2,53 @@
 #include <iostream>
 using namespace std;
 
-#define NO_WAY 10001
+#define NO_WAY 20000
+int arry[20001] = {0};
 
-void dijkstra(int** map, int* val, int node, int node_val, const int& n, int time){
-	
+void dijkstra(int** map, int* val, int node, const int size, int t){
 	//...
-	if(time == n - 2)return;
-	int min = 10001, node_1 = node;
-	for(int i = 1; i < n; i++){
+	if(t == size - 1 )return;
+	arry[node] = 1;
+	int min = NO_WAY;int node_next;
+	for(int i = 1; i < size; i++){
 		if( map[node][i] < NO_WAY ){
-			if(node_val + map[node][i] < val[i]){
-				val[i] += node_val + map[node][i];
-			}
-			if(val[i] < min){
-				node_1 = i;
-				min = val[i];	
+			if( val[node] + map[node][i] < val[i] ){
+				val[i] = val[node] + map[node][i];
 			}
 		}
 	}
-	dijkstra(map, val, node_1, min, n, time + 1);
+	for(int i = 2; i < size; i++){
+		if( val[i] < min && arry[i] != 1){
+			min = val[i];
+			node_next = i;
+		}
+	}
+	dijkstra(map, val, node_next, size, t + 1);
 	//...
 }
 
 int main(){
 	int n, m;
 	cin >> n >> m;n++;
-	int* val = new int[n];		
+	int* ans = new int[n];
 	int** map = new int*[n];
 	for(int i = 0; i < n; i++){
 		map[i] = new int[n];
-		val[i] = NO_WAY;
+		ans[i] = NO_WAY;
 		for(int j = 0; j < n; j++)map[i][j] = NO_WAY;
 	}
+	ans[1] = 0;
 	int x, y, v;
 	for(int i = 0; i < m; i++){
 		cin >> x >> y >> v;
 		map[x][y] = v;
 	}
 	
-	dijkstra(map, val, 1, 0, n, 0);
+	dijkstra(map, ans, 1, n, 0);
 	
-	for(int i = 0; i < n; i++){
-		cout << val[i] << " ";
+	for(int i = 2; i < n; i++){
+		cout << ans[i];
+		if(i + 1 < n)cout << "\n";
 	}
 	return 0;
 }
