@@ -1,9 +1,9 @@
-//dijkstra
+//dijkstra Œ¥ÕÍ…∆ 
 #include <iostream>
 using namespace std;
 
 #define NO_WAY 20000
-int arry[20001] = {0};
+int arry[20001] = { 0 };
 
 void dijkstra(int** map, int* val, int node, const int size, int t){
 	//...
@@ -50,5 +50,6 @@ int main(){
 		cout << ans[i];
 		if(i + 1 < n)cout << "\n";
 	}
+	cin >> n;
 	return 0;
 }
