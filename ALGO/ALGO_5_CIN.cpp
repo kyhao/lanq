@@ -1,6 +1,4 @@
 #include <iostream>
-#include <cstdio>
-#include <vector>
 #include <queue>
 using namespace std;
 
@@ -89,7 +87,7 @@ void Dijkstra(int s, int parent[], bool visited[], node d[], vernode* Ver)    //
 int main()
 {
     int m, a, b, c;
-    scanf("%d%d", &n, &m);
+    cin >> n >> m;
 	vernode* Ver = new vernode[n+1];
     Init(Ver);
     int* parent = new int[n+1];
@@ -97,13 +95,13 @@ int main()
     node* d = new node[n+1];     
     while(m--)
     {
-        scanf("%d%d%d", &a, &b, &c);
+        cin >> a >> b >> c;
         Insert(a, b, c, Ver);
     }
     Dijkstra(1, parent, visited, d, Ver);
     for(int i = 2; i <= n; i++){
-    	printf("%d", d[i].w);
-    	if( i+1 <= n)printf("\n");
+    	cout << d[i].w;
+    	if( i+1 <= n)cout << "\n";
     }
     return 0;
 }
