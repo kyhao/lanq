@@ -1,93 +1,153 @@
-//ALGO5 使用邻接表
 #include <iostream>
+#include <cstdio>
+#include <vector>
+#include <queue>
 using namespace std;
 
-#define NO_WAY 20000
-#define MAX 30000
-//添加节点 
+#define maxn 200001//最大顶点个数
+int n;       //顶点个数
 
+struct arcnode  //边结点
+{
+    int vertex;     //与表头结点相邻的顶点编号
+    int weight;     //连接两顶点的边的权值
+    arcnode * next; //指向下一相邻接点
+    arcnode() {}
+    arcnode(int v,int w):vertex(v),weight(w),next(NULL) {}
+};
 
-void add(int** side_list, int index, int& now){
-	if( side_list[index][2] == MAX ){
-		side_list[index][2] = now;
-		return;
-	}else{
-		add(side_list, side_list[index][2], now);
-	}
+struct vernode      //顶点结点，为每一条邻接表的表头结点
+{
+    int vex;    //当前定点编号
+    arcnode * firarc;   //与该顶点相连的第一个顶点组成的边
+}Ver[maxn];
+
+void Init()  //建立图的邻接表需要先初始化，建立顶点结点
+{
+    for(int i = 1; i <= n; i++)
+    {
+        Ver[i].vex = i;
+        Ver[i].firarc = NULL;
+    }
 }
 
-//搜索节点的下一节点和边 
-int get_node(int** node, int** side_list, int index, int min_node, const int& v){
-	
-	node[ side_list[index][0] ][0] = side_list[index][1] + node[v][0];	
-	if(side_list[index][2] == MAX){
-		return min_node; 
-	}else{
-		return get_node(node, side_List, side_list[index][2], min_node);
-	}
+void Insert(int a, int b, int w)  //尾插法，插入以a为起点，b为终点，权为w的边，效率不如头插，但是可以去重边
+{
+    arcnode * q = new arcnode(b, w);
+    if(Ver[a].firarc == NULL)
+        Ver[a].firarc = q;
+    else
+    {
+        arcnode * p = Ver[a].firarc;
+        if(p->vertex == b)
+        {
+            if(p->weight > w)
+                p->weight = w;
+            return ;
+        }
+        while(p->next != NULL)
+        {
+            if(p->next->vertex == b)
+            {
+                if(p->next->weight > w)
+                    p->next->weight = w;
+                return ;
+            }
+            p = p->next;
+        }
+        p->next = q;
+    }
+}
+void Insert2(int a, int b, int w)   //头插法，效率更高，但不能去重边
+{
+    arcnode * q = new arcnode(b, w);
+    if(Ver[a].firarc == NULL)
+        Ver[a].firarc = q;
+    else
+    {
+        arcnode * p = Ver[a].firarc;
+        q->next = p;
+        Ver[a].firarc = q;
+    }
+}
+struct node     //顶点节点，保存id和到源顶点的估算距离，优先队列需要的类型
+{
+    int id;     //源顶点id和估算距离
+    int w;
+    friend bool operator<(node a, node b)   //因要实现最小堆，按升序排列，因而需要重载运算符，重定义优先级，以小为先
+    {
+        return a.w > b.w;
+    }
+};
+
+#define INF 0xfffff    //权值上限
+//int parent[maxn];   //每个顶点的父亲节点，可以用于还原最短路径树
+//bool visited[maxn]; //用于判断顶点是否已经在最短路径树中，或者说是否已找到最短路径
+//node d[maxn];      //源点到每个顶点估算距离，最后结果为源点到所有顶点的最短路。
+priority_queue<node> q; //优先队列stl实现
+void Dijkstra(int s, int parent[], bool visited[], node d[])    //Dijkstra算法，传入源顶点
+{
+    for(int i = 1; i <= n; i++) //初始化
+    {
+        d[i].id = i;
+        d[i].w = INF;           //估算距离置INF
+        parent[i] = -1;         //每个顶点都无父亲节点
+        visited[i] = false;     //都未找到最短路
+    }
+    d[s].w = 0;                 //源点到源点最短路权值为0
+    q.push(d[s]);               //压入队列中
+    while(!q.empty())           //算法的核心，队列空说明完成了操作
+    {
+        node cd = q.top();      //取最小估算距离顶点
+        q.pop();
+        int u = cd.id;
+        if(visited[u])   //注意这一句的深意，避免很多不必要的操作
+            continue;
+        visited[u] = true;
+        arcnode * p = Ver[u].firarc;
+        //松弛操作
+        while(p != NULL)    //找所有与他相邻的顶点，进行松弛操作，更新估算距离，压入队列。
+        {
+            int v = p->vertex;
+            if(!visited[v] && d[v].w > d[u].w+p->weight)
+            {
+                d[v].w = d[u].w+p->weight;
+                parent[v] = u;
+                q.push(d[v]);
+            }
+            p = p->next;
+        }
+    }
 }
 
-//dijkstra算法 
-void dijkstra(int** node, int** side_list, int index){
-	if( node[index][1] != MAX ){
-		get_node(node, side_list, node[index][1], MAX, index);
-		dijkstra(node, side_list, x);
-	}
-}
-
-/*//输出显示邻接表 
-void print(int** side_list, int index){
-	cout << side_list[index][0] << "|" << side_list[index][1] << "|" << side_list[index][2] << "->";
-	if( side_list[index][2] == MAX ){
-		cout << "NULL\n";
-		return;
-	}else{
-		print(side_list, side_list[index][2]);
-	}
-}
-*/
-
-int main(){
-	int n, m, u, v, l;
-	cin >> n >> m;n++;
-	int** node = new int*[n];
-	int** side_list = new int*[m];
-	for(int i = 0; i < n; i++){
-		node[i] = new int[2];
-		node[i][0] = NO_WAY;
-		node[i][1] = MAX;
-	}
-	node[1][0] = 0;
-	for(int i = 0; i < m; i++){
-		side_list[i] = new int[3];
-		side_list[i][0] = MAX;
-		side_list[i][1] = NO_WAY;
-		side_list[i][2] = MAX;
-	}
-	int k = 0;
-	for(int i = 0; i < m; i++){
-		cin >> u >> v >> l;
-		side_list[i][0] = v;
-		side_list[i][1] = l;
-		if( node[u][1] == MAX){
-			node[u][1] = i;
-		}else{
-			add(side_list, node[u][1], i);
-		}
-	}
-	
-	/*//输出显示存储结构 
-	for(int i = 1; i < n; i++){
-		cout << node[i][0] << "|";
-		cout << node[i][1] << " -> ";
-		if(node[i][1] == MAX){
-			cout << "NULL\n";
-			continue;
-		}else{
-			print(side_list, node[i][1]);
-		}		
-	}
+int main()
+{
+    int m, a, b, c, st, ed;
+    //printf("请输入顶点数和边数：\n");
+    scanf("%d%d", &n, &m);
+    //printf("请输入边以及权值（a, b, c)\n");
+    Init();     //计算前必须初始化
+    int* parent = new int[n+1];
+    bool* visited = new bool[n+1];
+    node* d = new node[n+1];
+    while(m--)
+    {
+        scanf("%d%d%d", &a, &b, &c);
+        Insert2(a, b, c);   //无向图注意存储两条边
+        Insert2(b, a, c);
+    }
+    //printf("请输入起点和终点：\n");
+    //scanf("%d%d", &st, &ed);
+    Dijkstra(1, parent, visited, d);
+    for(int i = 2; i <= n; i++){
+    	printf("%d", d[i].w);
+    	if( i+1 <= n)printf("\n");
+    }
+    /*
+    if(d[ed].w != INF)
+        printf("最短路径权值为：%d\n", d[ed].w);
+    else
+        printf("不存在从顶点%d到顶点%d的最短路径。\n", st, ed);
 	*/
-	
-	return 0;
+    return 0;
 }
