@@ -18,23 +18,28 @@ priority_queue<side> e;
 int kruskal(int* node_val, bool* node_flag, int n){
 	int sum = 0;
 	bool iscircle = false;	//圆圈标识位 
-	int* tree = new int[n+1];	//用于每个节点归属树的标识。 
-	bool a = node_flag[e.top().s], b = node_flag[e.top().e];
+	int* tree = new int[n+1];	//用于每个节点归属树的标识。
+	//for(int j = 0; j < n+1; j++){
+	//	tree[j] = -1;
+	//}
 	for(int i = 0; i < n-1; ){
 		//判断是否成环
-		if( a || b ){
-			if( !a && b ){
+		//cout << "flag1: " << node_flag[e.top().s] << " " << node_flag[e.top().e] << "\n";
+		if( node_flag[e.top().s] || node_flag[e.top().e] ){
+			
+			if( !node_flag[e.top().s] && node_flag[e.top().e] ){
 				tree[e.top().s] = tree[e.top().e];iscircle = false;
-			}
-			if( a && !b ){
+			}else
+			if( node_flag[e.top().s] && !node_flag[e.top().e] ){
 				tree[e.top().e] = tree[e.top().s];iscircle = false;
-			}
-			if( a && b){
+			}else
+			if( node_flag[e.top().s] && node_flag[e.top().e]){
 				if( tree[e.top().s] == tree[e.top().e]){
 					iscircle = true;
 				}else{
-					for(int i = 0; i < n + 1; i++){
-						if(tree[i] == tree[e.top().s])tree[i] = tree[e.top().e];
+					int t1 = tree[e.top().s];
+					for(int k1 = 0; k1 < n + 1; k1++){
+						if(tree[k1] == t1)tree[k1] = tree[e.top().e];
 					}
 					iscircle = false;
 				}
@@ -45,20 +50,18 @@ int kruskal(int* node_val, bool* node_flag, int n){
 			iscircle = false;
 		}
 		//处理成环和不成环结果 
-		if(iscircle){		
+		if(iscircle){	
+			//cout << "NO: " << e.top().s << " -> " << e.top().e << " " << e.top().v << "\n";	
 			e.pop();
 		}else{
-			cout << e.top().s << " -> " << e.top().e << "\n";
-			sum += node_val[e.top().s] + ( e.top().v * 2 ) + node_val[e.top().e];	//起点值+边权值+终点值
+			cout << "OK: " << e.top().s << " -> " << e.top().e << " " << e.top().v << "\n";
+			sum += node_val[e.top().s] + ( e.top().v * 2 ) + node_val[e.top().e];	//起点值+边权值*2+终点值
 			node_flag[e.top().s] = true;		// 标记已选节点
 			node_flag[e.top().e] = true;		// 标记已选节点
+			//cout << "flag2: " << node_flag[e.top().s] << " " << node_flag[e.top().e] << "\n";
 			e.pop();
 			i++;
-			//cout << i << "-";
 		}
-	}
-	for(int i = 1; i < n + 1; i++){
-		cout << tree[i] << "-";
 	}
 	delete[] tree;
 	return sum;
@@ -83,7 +86,6 @@ int main(){
 		cin >> x.s >> x.e >> x.v;
 		e.push(x);
 	}	
-	cout << kruskal(node_val, node_flag, n) + min;
-	
+	cout << kruskal(node_val, node_flag, n) + min;	
 	return 0;
 } 
