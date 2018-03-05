@@ -47,7 +47,7 @@ void kruscal(){
         fu = find(u);
         fv = find(v);
         if(fu == fv)continue;
-        printf("%d -> %d\n", u, v); 
+        //printf("%d -> %d\n", u, v); 
         sum += edge[i].cap;
         fa[fu] = fv;
         d[u] ++;
