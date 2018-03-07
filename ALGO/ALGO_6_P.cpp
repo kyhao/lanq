@@ -1,8 +1,4 @@
-#include <string.h>
-#include <stdio.h>
 #include <iostream>
-#include <vector>
-#include <queue>
 #include <algorithm>
 using namespace std;
 
@@ -47,7 +43,6 @@ void kruscal(){
         fu = find(u);
         fv = find(v);
         if(fu == fv)continue;
-        //printf("%d -> %d\n", u, v); 
         sum += edge[i].cap;
         fa[fu] = fv;
         d[u] ++;
@@ -57,22 +52,22 @@ void kruscal(){
     for(int i = 1; i <= n; ++i){
         if(tmp > p[i])tmp = p[i];
     }
-    printf("%d\n",sum + tmp);
+    cout << sum + tmp;
 }
 int main() {
     int i;
     int s,t,c;
-    while(~scanf("%d%d",&n,&m)) {
-        M = 0;
-        for(i = 1; i <= n; ++i ){
-            scanf("%d",&p[i]);
-        }
-        for(i = 0; i < m; i++) {
-            scanf("%d%d%d",&s,&t,&c);
-            add(s,t,c);
-        }
-        sort(edge, edge + M, cmp);
-        kruscal();
+    ios::sync_with_stdio(false);
+    cin >> n, m; 
+    M = 0;
+    for(i = 1; i <= n; ++i ){
+        cin >> p[i];
     }
+    for(i = 0; i < m; i++) {
+        cin >> s >> t >> c;
+        add(s,t,c);
+    }
+    sort(edge, edge + M, cmp);
+    kruscal();
     return 0;
 }
